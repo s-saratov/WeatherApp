@@ -1,51 +1,61 @@
-/*
-Задание
-
-Требования:
-  - Нужно создать кнопку "Get Joke", при клике на которую, будет выполняться GET запрос(используйте fetch). В ответе на запрос будет приходить случайная шутка
-  - url: https://official-joke-api.appspot.com/random_joke
-  - После того как вы получите успешный ответ, разместите шутку на странице
-  - Если запрос завершиться ошибкой, её нужно разместить на странице и выделить красным цветом
-  - Каждый раз, когда происходит клик на кнопку, должен выполняться новый запрос и приходить новая шутка
-  - Во время запроса кнопка должна быть заблокирована
-  - Стилизуйте на ваше усмотрение
-*/
-
-const JOKE_URL = "https://official-joke-api.appspot.com/random_joke"; // глобальная переменная, содержащая ссылку на сервер шуток
+// Создаём глобальные переменные
+let city;
+let apiKey = "2ae2adfffc8ebc37abd62fe2b222ef39";
 
 // Создаём переменные для привязки к необходимым объектам на странице
-const JOKE_TEXT = document.getElementById("joke-text");
-const LOAD_IND = document.getElementById("load-ind");
+const CITY_INPUT = document.getElementById("city-input");
+const WEATHER_CONTAINER = document.getElementById("weather-container");
+const CITY_NAME = document.getElementById("city-name");
+const WEATHER_ICON = document.getElementById("weather-icon");
+const WEATHER_DESCRIPTION = document.getElementById("weather-description");
+const TEMP_CURRENT = document.getElementById("temp-current");
+const TEMP_FEELS_LIKE = document.getElementById("temp-feels-like");
+const SPINNER = document.getElementById("spinner");
 const ERROR = document.getElementById("error");
 const BUTTON = document.getElementById("download-button");
 
-// Функция для получения шуток
-const getJoke = async () => {
-  LOAD_IND.style.display = "flex";
-  JOKE_TEXT.style.display = "none";
+// Функция для получения погоды
+const getWeather = async () => {
+
+  // Прекращаем выполнение функции, если поле ввода не заполнено
+  if (CITY_INPUT.value.trim() === "") {
+    return;
+  }
+
+  city = CITY_INPUT.value.trim().toLowerCase();
+  const WEATHER_CALL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+  SPINNER.style.display = "flex";
+  WEATHER_CONTAINER.style.display = "none";
   ERROR.style.display = "none";
   BUTTON.disabled = true;
 
   try {
-    const response = await fetch(JOKE_URL);
+    const response = await fetch(WEATHER_CALL);
     console.log(response);
     const result = await response.json();
     console.log(result);
 
     if (response.ok) {
-      JOKE_TEXT.innerHTML = `<p id="joke-text">${result.setup}<br><b>${result.punchline}</b></p>`;
-      LOAD_IND.style.display = "none";
+      SPINNER.style.display = "none";
       ERROR.style.display = "none";
-      JOKE_TEXT.style.display = "flex";
+      WEATHER_CONTAINER.style.display = "flex";
       BUTTON.disabled = false;
+      
+      CITY_NAME.textContent = result.name;
+      TEMP_CURRENT.textContent = `${result.main.temp}°`;
+      WEATHER_ICON.src = `http://openweathermap.org/img/wn/${result.weather[0].icon}@2x.png`;
+      WEATHER_DESCRIPTION.textContent = result.weather[0].description;      
+      TEMP_FEELS_LIKE.textContent = `(feels like ${result.main.feels_like}°)`;
+
     } else {
       throw new Error(result.message);
     }
 
   } catch (error) {
     console.log(error);
-    JOKE_TEXT.style.display = "none";
-    LOAD_IND.style.display = "none";
+    WEATHER_CONTAINER.style.display = "none";
+    SPINNER.style.display = "none";
     ERROR.style.display = "flex";
     ERROR.textContent = `Error: ${error.message}`;
 
@@ -54,8 +64,5 @@ const getJoke = async () => {
   }
 };
 
-// Возможность запуска функции с интервалом в 10 мс для проверки отработки ошибок
-// setInterval(getJoke, 10);
-
 // Подключаем к кнопке прослушивание событий с привязкой к функции
-BUTTON.addEventListener("click", getJoke);
+BUTTON.addEventListener("click", getWeather);

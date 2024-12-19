@@ -5,23 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" type="text/css" />
     <script src="index.js" defer></script>
-    <title>Homework 17</title>
+    <title>“Weather app</title>
   </head>
   <body>
     <div id="root">
       <header>
         <div class="info">
-          <h1>Jokes for every day</h1>
+          <h1>Weather app</h1>
         </div>
       </header>
       <main>
-        <div id="joke-container">
-          <p id="joke-text">Click the button to load a new joke!</p>
-          <p id="load-ind">Loading...</p>
-          <p id="error">Error!</p>
-          <button type="button" id="download-button">
-            Get Joke
-          </button>
+        <div id="main-container">
+          <div id="input-container">
+            <input
+              required
+              type="text"
+              name="city"
+              placeholder="Enter the name of the city"
+              id="city-input"
+            />
+            <button type="button" id="download-button">Search</button>
+          </div>
+
+          <div id="weather-container">
+            <p id="city-name">City name</p>
+            <div id="weather-main">
+              <div id="description">
+                <img id="weather-icon" src="" alt="Weather icon" />
+                <p id="weather-description">Clear</p>
+              </div>
+              <div id="temp">
+                <p id="temp-current">0°</p>
+                <p id="temp-feels-like">(feels like 0°)</p>
+              </div>
+            </div>
+          </div>
+          <div id="spinner"></div>
+          <div id="error">Error!</div>
         </div>
       </main>
     </div>

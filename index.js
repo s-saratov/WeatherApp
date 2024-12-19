@@ -19,6 +19,7 @@ const getWeather = async () => {
 
   // Прекращаем выполнение функции, если поле ввода не заполнено
   if (CITY_INPUT.value.trim() === "") {
+    alert("Enter the name of the city!");
     return;
   }
 

@@ -50,7 +50,7 @@ const getWeather = async () => {
       TEMP_FEELS_LIKE.textContent = `(feels like ${result.main.feels_like}°)`;
 
     } else {
-      throw new Error(result.message);
+      throw new Error(`#${result.cod}: ${result.message}`);
     }
 
   } catch (error) {
@@ -58,7 +58,7 @@ const getWeather = async () => {
     WEATHER_CONTAINER.style.display = "none";
     SPINNER.style.display = "none";
     ERROR.style.display = "flex";
-    ERROR.textContent = `Error: ${error.message}`;
+    ERROR.textContent = `Error ${error.message}`;
 
   } finally {
     BUTTON.disabled = false;
